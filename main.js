@@ -21,7 +21,6 @@ class Blink4home extends utils.Adapter {
 			...options,
 			name: 'blink4home',
 		});
-		this.log.debug('begin setup adapter');
 		this.on('ready', this.onAdapterStart.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onAdapterStop.bind(this));
