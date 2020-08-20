@@ -108,7 +108,10 @@
 	"native": {
 		"username": "your-email@domain.com",
 		"password": "password",
-		"pollingInterval": 10
+		"pollingInterval": 10,
+		"token": "token",
+		"regionId": "regionId",
+		"accountId": 12345
 	},
 	"objects": [],
 	"instanceObjects": []

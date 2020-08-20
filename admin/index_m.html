@@ -6,11 +6,11 @@
 	<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
 	<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 	<link rel="stylesheet" type="text/css" href="style.css" />
-	
+
 	<script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="../../lib/js/ace-1.2.0/ace.js"></script>
-	
+
 	<!-- these files always have to be included -->
 	<script type="text/javascript" src="../../js/translate.js"></script>
 	<script type="text/javascript" src="../../lib/js/materialize.js"></script>
@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="words.js"></script>
 	<script type="text/javascript">
 		var secret;
-	
+
 		function encrypt(key, value) {
 			var result = '';
 			for(var i = 0; i < value.length; ++i) {
@@ -26,7 +26,7 @@
 			}
 			return result;
 		}
-	
+
 		function decrypt(key, value) {
 			var result = '';
 			for(var i = 0; i < value.length; ++i) {
@@ -34,20 +34,20 @@
 			}
 			return result;
 		}
-	
+
 		// the function loadSettings has to exist ...
 		function loadHelper(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
 			if (!settings) return;
 			if (settings.pollingInterval === undefined) settings.pollingInterval = 20;
-	
+
 			$('.value').each(function () {
 				var $key = $(this);
 				var id = $key.attr('id');
 				if (id === 'password') {
 					settings[id] = decrypt(secret, settings[id]);
 				}
-	
+
 				if ($key.attr('type') === 'checkbox') {
 					// do not call onChange direct, because onChange could expect some arguments
 					$key.prop('checked', settings[id]).change(function() {
@@ -65,14 +65,14 @@
 			onChange(false);
 			M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
 		}
-	
+
 		// the function loadSettings has to exist ...
 		function load(settings, onChange) {
 			socket.emit('getObject', 'system.config', function (err, obj) {
 				secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
 				loadHelper(settings, onChange);
 			});
-	
+
 			onChange(false);
 		}
 		// ... and the function save has to exist.
@@ -83,7 +83,7 @@
 			$('.value').each(function () {
 				var $this = $(this);
 				var id = $this.attr('id');
-	
+
 				if ($this.attr('type') === 'checkbox') {
 					obj[id] = $this.prop('checked');
 				} else {
@@ -94,7 +94,7 @@
 					obj[id] = value;
 				}
 			});
-	
+
 			callback(obj);
 		}
 	</script>
@@ -119,12 +119,27 @@
                 <input type="text" class="value" id="username" />
                 <label for="username" class="translate">Username</label>
 			</div>
-			
+
              <div class="col s6 input-field">
                 <input type="password" class="value" id="password" />
                 <label for="password" class="translate">Password</label>
 			</div>
-			
+
+			<div class="col s6 input-field">
+				<input type="token" class="value" id="token" />
+				<label for="token" class="translate">Token</label>
+			</div>
+
+			<div class="col s6 input-field">
+				<input type="regionId" class="value" id="regionId" />
+				<label for="regionId" class="translate">regionId</label>
+			</div>
+
+			<div class="col s6 input-field">
+				<input type="accountId" class="value" id="accountId" />
+				<label for="accountId" class="translate">accountId</label>
+			</div>
+
 	    <div class="col s6 input-field">
                 <input type="number" class="value" id="pollingInterval" />
                 <label for="pollingInterval" class="translate">Polling Interval (seconds)</label>

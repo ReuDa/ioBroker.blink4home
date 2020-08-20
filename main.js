@@ -36,7 +36,7 @@ class Blink4home extends utils.Adapter {
 			}
 			this.log.debug('setup encryption');
 		});
-		
+
 		function decrypt(key, value) {
 			let result = '';
 			for (let i = 0; i < value.length; ++i) {
@@ -51,7 +51,7 @@ class Blink4home extends utils.Adapter {
 	 */
 	async onAdapterStart() {
 		// Initialize your adapter here
-				
+
 		// this.config: User defined configurations
 		this.log.debug('config Username: ' + this.config.username);
 		this.log.debug('config Password: ' + (this.config.password ? '*****************' : 'empty!'));
@@ -59,7 +59,11 @@ class Blink4home extends utils.Adapter {
 		this._authtoken = '';
 
 		// inital Blink authentification
-		this.blink = new BlinkAPI(this.config.username, this.config.password);
+		this.blink = new BlinkAPI(this.config.username, this.config.password, "iobroker", {
+			"_token" : this.config.token,
+			"_region_id" : this.config.regionId,
+			"_account_id" : this.config.accountId
+		});
 
 		// all states changes inside the adapters namespace are subscribed
 		this.pollStatusFromBlinkServers(this, this.config.pollingInterval);
@@ -124,7 +128,7 @@ class Blink4home extends utils.Adapter {
 		});
 		return promises;
 	}
-	
+
 	updateStatesFromSummary(summary){
 		Object.entries(summary.network).forEach( (networkAttr) => {
 			const key = networkAttr[0];
@@ -139,7 +143,7 @@ class Blink4home extends utils.Adapter {
 			});
 		});
 	}
-	
+
 	pollStatusFromBlinkServers(scope, intsecs){
 		scope.log.debug('start polling from server. interval ' + intsecs + ' seconds.');
 		scope.blink.setupSystem().then(() => {
@@ -166,7 +170,7 @@ class Blink4home extends utils.Adapter {
 			});
 		});
 	}
-	
+
 	/**
 	 * Is called if a subscribed state changes
 	 * @param {string} id
@@ -193,7 +197,7 @@ class Blink4home extends utils.Adapter {
 				this.log.info('someone '+statetext+' ('+state.val+') the network '+networkname);
 				this.blink.setupSystem(networkname).then(() => {
 					this.blink.setArmed(state.val);
-			
+
 				}, error => {
 					// @ts-ignore
 					this.log.error(error);
